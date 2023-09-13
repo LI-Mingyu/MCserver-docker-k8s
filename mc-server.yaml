@@ -14,49 +14,58 @@ data:
 
 ---
 
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: mc-server
-  labels:
-    app: minecraft
 spec:
-  containers:
-  - name: mc-container
-    image: limingyu007/minecraft-server:1.20.1
-    ports:
-    - containerPort: 25565
-    volumeMounts:
-    - mountPath: /minecraft/world
-      name: mc-data
-      subPath: world
-    - mountPath: /minecraft/eula.txt
-      name: mc-config
-      subPath: eula.txt
-    - mountPath: /minecraft/server.properties
-      name: mc-config
-      subPath: server.properties
-    livenessProbe:
-      tcpSocket:
-        port: 25565
-      initialDelaySeconds: 30
-      periodSeconds: 10
-    startupProbe:
-      tcpSocket:
-        port: 25565
-      initialDelaySeconds: 10
-      periodSeconds: 5
-      failureThreshold: 10
-    resources:
-      requests:
-        memory: "1.5Gi"
-  volumes:
-  - name: mc-data
-    persistentVolumeClaim:
-      claimName: mc-pvc
-  - name: mc-config
-    configMap:
-      name: mc-config
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: minecraft
+  template:
+    metadata:
+      labels:
+        app: minecraft
+    spec:
+      containers:
+      - name: mc-container
+        image: limingyu007/minecraft-server:1.20.1
+        ports:
+        - containerPort: 25565
+        volumeMounts:
+        - mountPath: /minecraft/world
+          name: mc-data
+          subPath: world
+        - mountPath: /minecraft/eula.txt
+          name: mc-config
+          subPath: eula.txt
+        - mountPath: /minecraft/server.properties
+          name: mc-config
+          subPath: server.properties
+        livenessProbe:
+          tcpSocket:
+            port: 25565
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        startupProbe:
+          tcpSocket:
+            port: 25565
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 10
+        resources:
+          requests:
+            memory: "1.5Gi"
+      volumes:
+      - name: mc-data
+        persistentVolumeClaim:
+          claimName: mc-pvc
+      - name: mc-config
+        configMap:
+          name: mc-config
 
 ---
 
@@ -84,5 +93,4 @@ spec:
     - protocol: TCP
       port: 25565
       targetPort: 25565
-      nodePort: 32693
   type: NodePort 
