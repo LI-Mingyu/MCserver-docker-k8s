@@ -1,0 +1,8 @@
+ServerName: default
+image: limingyu007/minecraft-server:1.20.1
+serverProperties:
+  gamemode: survival
+  online-mode: false
+  difficulty: peaceful
+  enable-rcon: true
+  rcon.password: defaultPassword

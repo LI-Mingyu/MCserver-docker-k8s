@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mc-server-{{ .Values.ServerName }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: minecraft-{{ .Values.ServerName }}
+  template:
+    metadata:
+      labels:
+        app: minecraft-{{ .Values.ServerName }}
+    spec:
+      containers:
+      - name: mc-container
+        image: {{ .Values.image }}
+        ports:
+        - containerPort: 25565
+        volumeMounts:
+        - mountPath: /minecraft/world
+          name: mc-data
+          subPath: world
+        - mountPath: /minecraft/eula.txt
+          name: mc-config
+          subPath: eula.txt
+        - mountPath: /minecraft/server.properties
+          name: mc-config
+          subPath: server.properties
+        livenessProbe:
+          tcpSocket:
+            port: 25565
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        startupProbe:
+          tcpSocket:
+            port: 25565
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 10
+        resources:
+          requests:
+            memory: "1.5Gi"
+      volumes:
+      - name: mc-data
+        persistentVolumeClaim:
+          claimName: mc-pvc-{{ .Values.ServerName }}
+      - name: mc-config
+        configMap:
+          name: mc-config-{{ .Values.ServerName }}
