@@ -1,6 +1,6 @@
 apiVersion: v2
-name: mc-helm-chart
-description: A Helm chart for Kubernetes
+name: mc-server-helm-chart
+description: A Helm chart for MC server
 
 # A chart can be either an 'application' or a 'library' chart.
 #
