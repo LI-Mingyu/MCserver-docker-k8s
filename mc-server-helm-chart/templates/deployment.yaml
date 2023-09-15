@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mc-server-{{ .Values.ServerName }}
+  name: mc-server-{{ .Values.serverName }}
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: minecraft-{{ .Values.ServerName }}
+      app: minecraft-{{ .Values.serverName }}
   template:
     metadata:
       annotations:
         serverproperties-hash: {{ toYaml .Values.serverProperties | sha256sum }}
       labels:
-        app: minecraft-{{ .Values.ServerName }}
+        app: minecraft-{{ .Values.serverName }}
     spec:
       containers:
       - name: mc-container
@@ -48,7 +48,7 @@ spec:
       volumes:
       - name: mc-data
         persistentVolumeClaim:
-          claimName: mc-pvc-{{ .Values.ServerName }}
+          claimName: mc-pvc-{{ .Values.serverName }}
       - name: mc-config
         configMap:
-          name: mc-config-{{ .Values.ServerName }}
+          name: mc-config-{{ .Values.serverName }}

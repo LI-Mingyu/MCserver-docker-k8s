@@ -1,4 +1,4 @@
-ServerName: default
+serverName: default
 image: limingyu007/minecraft-server:1.20.1
 serverProperties:
   online-mode: false
