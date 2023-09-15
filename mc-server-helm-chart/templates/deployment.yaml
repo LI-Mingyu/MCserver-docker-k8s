@@ -11,6 +11,8 @@ spec:
       app: minecraft-{{ .Values.ServerName }}
   template:
     metadata:
+      annotations:
+        serverproperties-hash: {{ toYaml .Values.serverProperties | sha256sum }}
       labels:
         app: minecraft-{{ .Values.ServerName }}
     spec:
