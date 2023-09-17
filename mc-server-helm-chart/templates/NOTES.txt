@@ -1,0 +1,6 @@
+A Minecraft world is creating with properties:
+{{ toYaml .Values.serverProperties | indent 4 }}
+
+To persist your world's data, make sure the PVC (Persistent Volume Claim) is not deleted.
+
+Happy crafting!

@@ -1,0 +1,3 @@
+{{- if not (regexMatch "^[a-zA-Z0-9-]*$" .Values.serverName) }}
+{{- fail "Invalid serverName. The serverName can only contain alphanumeric characters and hyphens." }}
+{{- end }}
